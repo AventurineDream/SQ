@@ -1,38 +1,46 @@
+import hashlib
 import logging
 import random
-from typing import List, Dict
+from typing import Dict, List, Optional, Tuple # <-- Added Optional
 
-from schema import Event, EventType
+from schema import (
+    ActorTurnOutput,
+    DiaryCitation,
+    DiaryEntry, # <-- Added DiaryEntry
+    DiaryGenerationOutput,
+    Event,
+    EventType,
+    FailureCode,
+    OrchestratorIntentOutput,
+    OrchestratorNarrationOutput,
+)
 from db import LedgerDB
 from context import ContextAssembler
-from inference import OllamaAdapter
-from rules import TTRPGRulebook, CharacterSheet, Skill
-
-logger = logging.getLogger(__name__)
-
+from inference import LLMAdapter, OllamaAdapter # <-- Added adapters
+from rules import CharacterSheet, Skill
 class SimulationEngine:
-    """The Command Center Orchestrator. 
-    Manages the fluid turn-taking loop, delegates logic to the Rules engine,
-    and handles automatic retry/self-healing for the actors.
-    """
-    
-    def __init__(self, season_id: str, worldbook_data: Dict):
+    """The Command Center Orchestrator."""
+
+    def __init__(
+        self,
+        season_id: str,
+        worldbook_data: Dict,
+        db_path: str = "data/sq_ledger.db", # <-- Add this line
+    ):
         self.season_id = season_id
-        
-        # Initialize Core Modules
-        self.db = LedgerDB()
-        self.context_assembler = ContextAssembler(db=self.db)
-        
-        # Load the TTRPG Rules from the Worldbook JSON/Dict
-        self.rules = self._initialize_rules(worldbook_data)
-        
-        # Initialize the API Adapters
-        self.orchestrator_model = OllamaAdapter(model_name="qwen3:30b-instruct") # Larger model for Narration
-        self.actors = {
+        self.worldbook_data = worldbook_data
+
+        # Pass the db_path down to the Ledger
+        self.db = LedgerDB(db_path=db_path)
+
+        self.orchestrator_model: Optional[LLMAdapter] = OllamaAdapter(
+            model_name="qwen3:30b-instruct"
+        )
+        self.actors: Dict[str, LLMAdapter] = {
             "Sage": OllamaAdapter(model_name="gpt-oss:20b"),
             "Rory": OllamaAdapter(model_name="qwen3.8:27b"),
-            # Initialize actors 3 and 4 here...
         }
+        self.auto_judge = None
         
     def _initialize_rules(self, data: Dict) -> TTRPGRulebook:
         """Parses the Worldbook config into deterministic CharacterSheet objects."""

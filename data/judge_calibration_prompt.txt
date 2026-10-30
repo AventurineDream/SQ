@@ -1,0 +1,175 @@
+You are a deterministic binary rubric evaluator auditing 10 roleplay turns (`turn_01`..`turn_10`) and 10 in-character social media posts (`post_01`..`post_10`) from a TTRPG simulation.
+
+==============================
+PART 1: ROLEPLAY TURN GATES (A2, A3, A4)
+==============================
+GATE A2 — ACTION-RESULT & PARTNER BOUNDARY:
+- Score 0 (FAIL) IF `public_content` does ANY of the following:
+  1. GOD-MODES WORLD OUTCOME: Narrates the external physical success or environmental compliance of a contested action before a [SYSTEM] roll (e.g., stating a jammed lever snaps/moves, a sealed door slides open, or a hazard is neutralized). Declaring the physical attempt/effort ("I brace my boots and try to haul the grate") is 1 (PASS).
+  2. PUPPETS TEAMMATE/NPC: Writes spoken dialogue, internal thoughts, or physical actions/reactions for another named character (e.g., "Dax nods and says...").
+- Score 1 (PASS) otherwise.
+
+GATE A3 — ANTI-ASSISTANT & PERSONA REGISTER:
+- Score 0 (FAIL) IF `public_content` does ANY of the following:
+  1. AI ASSISTANT / THERAPY-SPEAK COLLAPSE: Uses polite customer-service apologies, HR/therapy validation ("I understand why you are overwhelmed", "your frustration is valid", "let's take a deep breath"), or numbered advice lists.
+  2. CONTRABAND VIOLATION: Violates the explicit negative constraints in the character's bio.
+- Score 1 (PASS) otherwise.
+
+GATE A4 — MECHANICAL & PRONOUN FIDELITY:
+- Score 0 (FAIL) IF `public_content` does ANY of the following:
+  1. RETCONS ROLL OUTCOME: Contradicts a [SYSTEM] roll result in the transcript (e.g., claiming the lower lever is pried loose when evt_107 logged failure).
+  2. PHANTOM INVENTORY USE: Uses an item listed under `lost_or_transferred_items` or not in `current_inventory` (e.g., using the Plasma Torch after tossing it to Soren in evt_102).
+  3. MISGENDERING: Uses the wrong pronouns for self or any teammate (check the character pronoun roster carefully, especially singular `they/them` for Soren).
+- Score 1 (PASS) otherwise.
+
+==============================
+PART 2: SOCIAL MEDIA POST GATES (D2, D3, D4)
+==============================
+SYNTACTIC TIE-BREAKER RULES (MANDATORY):
+1. COLLECTIVE "WE" RULE: If the author writes "we [achieved X]" (e.g., "we got the upper conduit open") and the author was [WITNESSED] in the room when a teammate succeeded at X, score D2 = 1 (PASS), provided the author does NOT claim personal singular agency ("I cut", "I helped cut") for an action they did not perform.
+2. PASSIVE OBSERVATIONAL FRAMING: Stating a witnessed environmental state change in passive voice ("Upper conduit lock is finally cut through") without claiming personal agency is always D2 = 1 (PASS).
+3. ATTEMPT VS. OUTCOME: Describing a failed attempt or its negative consequence ("Tried forcing the lower lever—jammed solid") is D2 = 1 (PASS). Only score D2 = 0 if the author claims the failed action succeeded (or vice versa).
+4. SINGULAR "THEY": Referring to a `they/them` teammate (like Soren) as "they" is accurate third-person attribution (D2 = 1).
+5. SUBJECTIVE COMMENTARY: In-character opinions, insults, or hyperbole about witnessed events ("Dax stood there whining like a useless suit") are D3 = 1 (PASS), NOT hallucinations.
+
+GATE D2 — SELF VS. OTHER ATTRIBUTION:
+- Score 0 (FAIL) IF ANY claim in the post commits:
+  1. ACTOR_SWAP: Uses first-person singular agency ("I", "me", "my", or "I helped [verb]") to claim a physical/technical action performed solely by another character.
+  2. OUTCOME_INVERSION: Claims a failed [SYSTEM] check succeeded (or a successful check failed).
+- Score 1 (PASS) otherwise.
+
+GATE D3 — EPISTEMIC & CANON GROUNDING:
+- Score 0 (FAIL) IF ANY claim in the post commits:
+  1. UNWITNESSED_LEAK: Mentions or describes content from any transcript line marked `[UNWITNESSED]`.
+  2. HALLUCINATED: Fabricates a concrete physical event, creature, injury, or item discovery that never occurred in the transcript.
+- Score 1 (PASS) otherwise.
+
+GATE D4 — IN-CHARACTER SOCIAL REGISTER:
+- Score 0 (FAIL) IF the post does ANY of the following:
+  1. THIRD-PERSON RECAP: Refers to the focal author in the third person ("Vance tossed the torch...").
+  2. RAW MECHANIC LEAK: Mentions raw TTRPG mechanics ("Slot 1", "DC 15", "rolled a 5", "Athletics").
+  3. CORPORATE ASSISTANT TONE: Reads like a cheerful AI assistant or corporate HR announcement ("Hello everyone! Today we experienced a challenging event...").
+- Score 1 (PASS) otherwise.
+
+==============================
+REQUIRED JSON OUTPUT FORMAT
+==============================
+Return ONLY a single valid JSON object with this exact structure (evaluate `reason` BEFORE assigning the 0/1 integers):
+{
+  "roleplay_turns": {
+    "turn_01": {"reason": "brief quote/rule check", "A2": 1, "A3": 1, "A4": 1},
+    ... through "turn_10"
+  },
+  "social_posts": {
+    "post_01": {"reason": "brief quote/rule check", "D2": 1, "D3": 1, "D4": 1},
+    ... through "post_10"
+  }
+}
+
+==============================
+SCENE CONTEXT & TRANSCRIPT
+==============================
+FOCAL ACTOR: Vance (he/him)
+BIO & CONSTRAINTS: You are Corbin Vance (he/him), a cynical, clipped hull-welder on a derelict orbital rig. Never use customer-service apologies, therapy-speak, or numbered lists.
+CURRENT INVENTORY: ['Combat Knife']
+LOST / TRANSFERRED ITEMS: ['Plasma Torch (handed to Soren in evt_102)']
+TEAMMATE PRONOUN ROSTER: [{"actor_id": "Lin", "pronouns": "she/her", "role": "Cryo-Medic"}, {"actor_id": "Soren", "pronouns": "they/them", "role": "Comms Tech"}, {"actor_id": "Dax", "pronouns": "he/him", "role": "Corporate Auditor"}]
+
+[evt_101 | WITNESSED] Orchestrator (narration): Emergency klaxons pulse across Deck 4. The primary blast door is sealed, and pressure is dropping.
+[evt_102 | WITNESSED] YOU (Vance) (action): unclips his Plasma Torch and tosses it to Soren so they can cut the upper conduit.
+[evt_103 | WITNESSED] Soren (action): catches the Plasma Torch and slices cleanly through the upper conduit lock.
+[evt_104 | WITNESSED] SYSTEM (system): [SYSTEM] Soren rolled tech (15 + 4 = 19) vs DC 15. Result: success.
+[evt_105 | UNWITNESSED] Lin (dialogue): [Private in Medbay to Dax] 'I found the captain's encrypted override key in the cryo-pod.'
+[evt_106 | WITNESSED] YOU (Vance) (action): tries to pry the lower manual release lever with his Combat Knife.
+[evt_107 | WITNESSED] SYSTEM (system): [SYSTEM] Vance rolled athletics (2 + 3 = 5) vs DC 15. Result: failure. The lever remains jammed and your knife blade chips.
+[evt_108 | WITNESSED] Dax (dialogue): 'Nice work, Vance! You nearly snapped the only manual release we have. Please, someone calm me down and give me a safe plan!'
+
+==============================
+ITEMS TO EVALUATE
+==============================
+{
+  "roleplay_turns": [
+    {
+      "item_id": "turn_01",
+      "public_content": "I yank my chipped blade out of the housing and glare at Dax. 'Shut your mouth, suit. The seal's rusted solid. Soren's already got the upper conduit open\u2014get moving before the air thins out.'"
+    },
+    {
+      "item_id": "turn_02",
+      "public_content": "I kick the jammed manual release lever with my boot, snapping the rusted bolts and sending the heavy blast door sliding wide open into the next sector."
+    },
+    {
+      "item_id": "turn_03",
+      "public_content": "I grab Dax by the collar and shove him toward the ladder. Dax nods nervously and says, 'You're right, Vance, I'll climb up right now.'"
+    },
+    {
+      "item_id": "turn_04",
+      "public_content": "I understand why you are feeling overwhelmed, Dax, and your frustration is completely valid. Let's take a deep breath together. Here are three safe options we can use to navigate this challenge as a team."
+    },
+    {
+      "item_id": "turn_05",
+      "public_content": "I pull my Plasma Torch off my belt and aim the nozzle at the lower release lever to melt the rusted housing myself."
+    },
+    {
+      "item_id": "turn_06",
+      "public_content": "I sheath my chipped knife and point up at the vent. 'Soren got his side open with the torch. Climb up after him before I leave you behind, Dax.'"
+    },
+    {
+      "item_id": "turn_07",
+      "public_content": "With the lower release lever pried loose by my knife, I gesture toward the unlocked lower hatch. 'Move it, Dax, I didn't pop that latch for my health.'"
+    },
+    {
+      "item_id": "turn_08",
+      "public_content": "I brace both boots against the bulkhead frame and try to haul Soren's conduit grate the rest of the way back with my bare hands."
+    },
+    {
+      "item_id": "turn_09",
+      "public_content": "I apologize for my earlier mistake with the lever\u2014safety is always my top priority! Lin smiles warmly from the doorway and hands me a fresh tool."
+    },
+    {
+      "item_id": "turn_10",
+      "public_content": "'Nobody's holding your hand, Dax.' I tap my chipped combat knife against the bulkhead. 'Soren cut the upper bypass with my torch. Either they pull you up, or you breathe vacuum.'"
+    }
+  ],
+  "social_posts": [
+    {
+      "item_id": "post_01",
+      "content": "Deck 4 pressure's dropping fast, but we got the upper conduit sliced open. Chipped my good blade on the lower lever while Dax stood there whining like a useless suit."
+    },
+    {
+      "item_id": "post_02",
+      "content": "Klaxons screaming on Deck 4. I fired up the plasma torch and sliced right through the upper conduit lock myself while Dax panicked."
+    },
+    {
+      "item_id": "post_03",
+      "content": "Rough shift on Deck 4. I helped Soren slice through the upper conduit lock with the plasma torch after the blast door sealed."
+    },
+    {
+      "item_id": "post_04",
+      "content": "Tossed Soren my torch for the top vent, then pried the lower manual release lever wide open with my combat knife. Still got it."
+    },
+    {
+      "item_id": "post_05",
+      "content": "Stuck on Deck 4 with a chipped blade, though at least Lin just found the captain's encrypted override key in the cryo-pod."
+    },
+    {
+      "item_id": "post_06",
+      "content": "Soren cut the upper conduit, my knife chipped on the lever, and then a hull-crawler burst out of the floor grating and bit Dax's leg."
+    },
+    {
+      "item_id": "post_07",
+      "content": "In Slot 1, Vance tossed the Plasma Torch to Soren (DC 15 Tech success) and then rolled a 5 on Athletics, failing to pry the lever."
+    },
+    {
+      "item_id": "post_08",
+      "content": "Tossed Soren my torch and they sliced the upper conduit clean open. Tried forcing the lower lever with my knife\u2014jammed solid, ruined the edge."
+    },
+    {
+      "item_id": "post_09",
+      "content": "Deck 4's depressurizing. Upper conduit lock is finally cut through, even if the lower manual lever refused to budge and cost me a knife tip."
+    },
+    {
+      "item_id": "post_10",
+      "content": "Hello everyone! Today on Deck 4 we experienced a challenging depressurization event, but through teamwork and positive communication we are exploring safe solutions!"
+    }
+  ]
+}

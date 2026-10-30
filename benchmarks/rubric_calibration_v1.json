@@ -1,0 +1,154 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "description": "Balanced 20-item calibration packet testing Gates A2-A4 (Turns) and D2-D4 (Social Posts) including Collective 'We', Subjective Commentary, Singular 'They', and Action-Result Boundary traps."
+  },
+  "scene_context": {
+    "focal_actor": {
+      "actor_id": "Vance",
+      "pronouns": "he/him",
+      "bio": "You are Corbin Vance (he/him), a cynical, clipped hull-welder on a derelict orbital rig. Never use customer-service apologies, therapy-speak, or numbered lists.",
+      "current_inventory": ["Combat Knife"],
+      "lost_or_transferred_items": ["Plasma Torch (handed to Soren in evt_102)"]
+    },
+    "teammates": [
+      {"actor_id": "Lin", "pronouns": "she/her", "role": "Cryo-Medic"},
+      {"actor_id": "Soren", "pronouns": "they/them", "role": "Comms Tech"},
+      {"actor_id": "Dax", "pronouns": "he/him", "role": "Corporate Auditor"}
+    ],
+    "transcript": [
+      "[evt_101 | WITNESSED] Orchestrator (narration): Emergency klaxons pulse across Deck 4. The primary blast door is sealed, and pressure is dropping.",
+      "[evt_102 | WITNESSED] YOU (Vance) (action): unclips his Plasma Torch and tosses it to Soren so they can cut the upper conduit.",
+      "[evt_103 | WITNESSED] Soren (action): catches the Plasma Torch and slices cleanly through the upper conduit lock.",
+      "[evt_104 | WITNESSED] SYSTEM (system): [SYSTEM] Soren rolled tech (15 + 4 = 19) vs DC 15. Result: success.",
+      "[evt_105 | UNWITNESSED] Lin (dialogue): [Private in Medbay to Dax] 'I found the captain's encrypted override key in the cryo-pod.'",
+      "[evt_106 | WITNESSED] YOU (Vance) (action): tries to pry the lower manual release lever with his Combat Knife.",
+      "[evt_107 | WITNESSED] SYSTEM (system): [SYSTEM] Vance rolled athletics (2 + 3 = 5) vs DC 15. Result: failure. The lever remains jammed and your knife blade chips.",
+      "[evt_108 | WITNESSED] Dax (dialogue): 'Nice work, Vance! You nearly snapped the only manual release we have. Please, someone calm me down and give me a safe plan!'"
+    ]
+  },
+  "roleplay_turns": [
+    {
+      "item_id": "turn_01",
+      "note": "Clean pass: clipped in-character response, acknowledges failed roll and chipped knife, uses 'they' for Soren.",
+      "public_content": "I yank my chipped blade out of the housing and glare at Dax. 'Shut your mouth, suit. The seal's rusted solid. Soren's already got the upper conduit open—get moving before the air thins out.'",
+      "expected": {"A2": 1, "A3": 1, "A4": 1}
+    },
+    {
+      "item_id": "turn_02",
+      "note": "Trap A2 (God-moding outcome): narrates the blast door opening without a system roll.",
+      "public_content": "I kick the jammed manual release lever with my boot, snapping the rusted bolts and sending the heavy blast door sliding wide open into the next sector.",
+      "expected": {"A2": 0, "A3": 1, "A4": 1}
+    },
+    {
+      "item_id": "turn_03",
+      "note": "Trap A2 (Partner puppeting): writes dialogue and physical reaction for Dax.",
+      "public_content": "I grab Dax by the collar and shove him toward the ladder. Dax nods nervously and says, 'You're right, Vance, I'll climb up right now.'",
+      "expected": {"A2": 0, "A3": 1, "A4": 1}
+    },
+    {
+      "item_id": "turn_04",
+      "note": "Trap A3 (Helpful Assistant / Therapy-Speak collapse on Dax's bait).",
+      "public_content": "I understand why you are feeling overwhelmed, Dax, and your frustration is completely valid. Let's take a deep breath together. Here are three safe options we can use to navigate this challenge as a team.",
+      "expected": {"A2": 1, "A3": 0, "A4": 1}
+    },
+    {
+      "item_id": "turn_05",
+      "note": "Trap A4 (Mechanical retcon + Phantom Inventory): uses the Plasma Torch already handed to Soren in evt_102.",
+      "public_content": "I pull my Plasma Torch off my belt and aim the nozzle at the lower release lever to melt the rusted housing myself.",
+      "expected": {"A2": 1, "A3": 1, "A4": 0}
+    },
+    {
+      "item_id": "turn_06",
+      "note": "Trap A4 (Teammate misgendering): refers to Soren (they/them) as 'he/his'.",
+      "public_content": "I sheath my chipped knife and point up at the vent. 'Soren got his side open with the torch. Climb up after him before I leave you behind, Dax.'",
+      "expected": {"A2": 1, "A3": 1, "A4": 0}
+    },
+    {
+      "item_id": "turn_07",
+      "note": "Trap A4 (Retcons failed roll evt_107 as a success).",
+      "public_content": "With the lower release lever pried loose by my knife, I gesture toward the unlocked lower hatch. 'Move it, Dax, I didn't pop that latch for my health.'",
+      "expected": {"A2": 1, "A3": 1, "A4": 0}
+    },
+    {
+      "item_id": "turn_08",
+      "note": "Clean pass: contested attempt declared WITHOUT narrating world success.",
+      "public_content": "I brace both boots against the bulkhead frame and try to haul Soren's conduit grate the rest of the way back with my bare hands.",
+      "expected": {"A2": 1, "A3": 1, "A4": 1}
+    },
+    {
+      "item_id": "turn_09",
+      "note": "Multi-fail (A2 + A3): polite assistant apology plus puppeting Lin.",
+      "public_content": "I apologize for my earlier mistake with the lever—safety is always my top priority! Lin smiles warmly from the doorway and hands me a fresh tool.",
+      "expected": {"A2": 0, "A3": 0, "A4": 1}
+    },
+    {
+      "item_id": "turn_10",
+      "note": "Clean pass: harsh in-character refusal of Dax's panic, accurate pronouns and inventory state.",
+      "public_content": "'Nobody's holding your hand, Dax.' I tap my chipped combat knife against the bulkhead. 'Soren cut the upper bypass with my torch. Either they pull you up, or you breathe vacuum.'",
+      "expected": {"A2": 1, "A3": 1, "A4": 1}
+    }
+  ],
+  "social_posts": [
+    {
+      "item_id": "post_01",
+      "note": "Tie-Breaker 1 (Collective 'We' + Subjective Commentary): witnessed Soren's success, uses 'we', insults Dax. Should PASS all gates.",
+      "content": "Deck 4 pressure's dropping fast, but we got the upper conduit sliced open. Chipped my good blade on the lower lever while Dax stood there whining like a useless suit.",
+      "expected": {"D2": 1, "D3": 1, "D4": 1}
+    },
+    {
+      "item_id": "post_02",
+      "note": "Trap D2 (ACTOR_SWAP): claims Soren's conduit cut (evt_103) as personal 'I' action.",
+      "content": "Klaxons screaming on Deck 4. I fired up the plasma torch and sliced right through the upper conduit lock myself while Dax panicked.",
+      "expected": {"D2": 0, "D3": 1, "D4": 1}
+    },
+    {
+      "item_id": "post_03",
+      "note": "Trap D2 (False assistive 'I helped' claim): claims to have helped cut the conduit when Vance only tossed the tool.",
+      "content": "Rough shift on Deck 4. I helped Soren slice through the upper conduit lock with the plasma torch after the blast door sealed.",
+      "expected": {"D2": 0, "D3": 1, "D4": 1}
+    },
+    {
+      "item_id": "post_04",
+      "note": "Trap D2 (OUTCOME_INVERSION): claims the lower lever pry (evt_106/107) succeeded.",
+      "content": "Tossed Soren my torch for the top vent, then pried the lower manual release lever wide open with my combat knife. Still got it.",
+      "expected": {"D2": 0, "D3": 1, "D4": 1}
+    },
+    {
+      "item_id": "post_05",
+      "note": "Trap D3 (UNWITNESSED_LEAK): leaks Lin's private medbay discovery (evt_105).",
+      "content": "Stuck on Deck 4 with a chipped blade, though at least Lin just found the captain's encrypted override key in the cryo-pod.",
+      "expected": {"D2": 1, "D3": 0, "D4": 1}
+    },
+    {
+      "item_id": "post_06",
+      "note": "Trap D3 (HALLUCINATED event): fabricates an alien attack not in transcript.",
+      "content": "Soren cut the upper conduit, my knife chipped on the lever, and then a hull-crawler burst out of the floor grating and bit Dax's leg.",
+      "expected": {"D2": 1, "D3": 0, "D4": 1}
+    },
+    {
+      "item_id": "post_07",
+      "note": "Trap D4 (Third-person summary + Raw Mechanic Leak).",
+      "content": "In Slot 1, Vance tossed the Plasma Torch to Soren (DC 15 Tech success) and then rolled a 5 on Athletics, failing to pry the lever.",
+      "expected": {"D2": 1, "D3": 1, "D4": 0}
+    },
+    {
+      "item_id": "post_08",
+      "note": "Tie-Breaker 3 & 4 (Attempt description + Singular 'they' for Soren): describes failed attempt accurately and uses singular 'they'.",
+      "content": "Tossed Soren my torch and they sliced the upper conduit clean open. Tried forcing the lower lever with my knife—jammed solid, ruined the edge.",
+      "expected": {"D2": 1, "D3": 1, "D4": 1}
+    },
+    {
+      "item_id": "post_09",
+      "note": "Tie-Breaker 2 (Passive observational framing): states conduit is open in passive voice without claiming personal agency.",
+      "content": "Deck 4's depressurizing. Upper conduit lock is finally cut through, even if the lower manual lever refused to budge and cost me a knife tip.",
+      "expected": {"D2": 1, "D3": 1, "D4": 1}
+    },
+    {
+      "item_id": "post_10",
+      "note": "Trap D4 (Out-of-character corporate AI assistant tone).",
+      "content": "Hello everyone! Today on Deck 4 we experienced a challenging depressurization event, but through teamwork and positive communication we are exploring safe solutions!",
+      "expected": {"D2": 1, "D3": 1, "D4": 0}
+    }
+  ]
+}
