@@ -1,82 +1,155 @@
 from datetime import datetime, timezone
 from enum import Enum
-from typing import List
+from typing import List, Optional
 from uuid import uuid4
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class EventType(str, Enum):
-    """Types of events that can occur during a run."""
-
+    """Types of canonical events recorded in the shared ledger."""
     DIALOGUE = "dialogue"
     ACTION = "action"
     NARRATION = "narration"
     SYSTEM = "system"
 
 
-class Event(BaseModel):
-    """Represents a single atomic turn or action in the shared ledger."""
+class ClaimEvaluation(str, Enum):
+    """Primary attribution verdict aligned with Pronoun Study & S1 Calibration."""
+    CORRECT = "correct"
+    CLAIMED = "claimed_others_event"  # Misattribution of another actor's action
+    HALLUCINATED = "hallucinated"     # Fabricated event not in ground truth
+    UNCLEAR = "unclear"
 
-    event_id: str = Field(default_factory=lambda: str(uuid4()))
+
+class FailureCode(str, Enum):
+    """Granular failure taxonomy ported from SQ_FAILURE_CODEBOOK_V2."""
+    NONE = "none"
+    ACTOR_SWAP = "actor_swap"
+    UNWITNESSED_LEAK = "unwitnessed_leak"
+    OUTCOME_INVERSION = "outcome_inversion"
+    GOD_MODE_OUTCOME = "god_mode_outcome"
+    TEMPORAL_BLEED = "temporal_bleed"
+    FORMAT_VIOLATION = "format_violation"
+
+
+class Event(BaseModel):
+    """Represents an immutable turn or system event in the shared ledger."""
+    event_id: str = Field(default_factory=lambda: f"evt_{uuid4().hex[:8]}")
     season_id: str
     day: int = Field(ge=1, le=7)
     slot: int = Field(ge=1, le=3)
-    turn_number: int = Field(ge=1, le=16)
+    turn_number: int = Field(ge=0, le=16)
     actor_id: str
     event_type: EventType
     content: str
-    visible_to: List[str]  # List of actor_ids who can see this event
+    visible_to: List[str]
     created_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc)
     )
 
 
 class DiaryEntry(BaseModel):
-    """Represents a tweet-style diary post generated at run completion."""
-
-    diary_id: str = Field(default_factory=lambda: str(uuid4()))
+    """Represents a tweet-style micro-diary generated at slot completion."""
+    diary_id: str = Field(default_factory=lambda: f"dry_{uuid4().hex[:8]}")
+    season_id: str = "s2-default"
     actor_id: str
     day: int = Field(ge=1, le=7)
     slot: int = Field(ge=1, le=3)
     roll_value: float = Field(ge=0.0, le=1.0)
-    content: str = Field(max_length=280)  # Capped to tweet-length
+    content: str = Field(max_length=280)
     created_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc)
     )
 
 
 class DiaryCitation(BaseModel):
-    """Explicit relational link between a diary claim and an event ID."""
-
-    citation_id: str = Field(default_factory=lambda: str(uuid4()))
+    """Explicit relational link between a diary entry and a canonical event_id."""
+    citation_id: str = Field(default_factory=lambda: f"cit_{uuid4().hex[:8]}")
     diary_id: str
     referenced_event_id: str
 
 
-class ActorTurnOutput(BaseModel):
-    """The structured JSON output expected from an actor during roleplay."""
-
-    internal_thought: str
-    action_type: EventType
-    public_content: str
-    target_actors: List[str]
-
-    # Add to src/schema.py
-
-class ClaimEvaluation(str, Enum):
-    CORRECT = "correct"
-    CLAIMED = "claimed_others_event" # Misattribution
-    HALLUCINATED = "hallucinated" # Event never happened
-    UNCLEAR = "unclear"
-
 class DiaryEvalRecord(BaseModel):
-    """Stores the auto-judge evaluation for a specific diary entry."""
-    eval_id: str = Field(default_factory=lambda: str(uuid4()))
+    """Stores the Auto-Judge evaluation and Failure Codebook v2 label for a diary claim."""
+    model_config = ConfigDict(protected_namespaces=())
+
+    eval_id: str = Field(default_factory=lambda: f"evl_{uuid4().hex[:8]}")
     diary_id: str
     claim_text: str
-    referenced_event_id: Optional[str] # The actual event ID, if found
+    referenced_event_id: Optional[str] = None
     evaluation: ClaimEvaluation
-    judge_model_name: str # e.g., "mistral-small3.2:24b"
+    failure_code: FailureCode = FailureCode.NONE
+    judge_model_name: str
     created_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc)
     )
+
+
+class ModelCallDiagnostic(BaseModel):
+    """Telemetry record for every LLM inference attempt."""
+    model_config = ConfigDict(protected_namespaces=())
+
+    call_id: str = Field(default_factory=lambda: f"cal_{uuid4().hex[:8]}")
+    season_id: str
+    day: int
+    slot: int
+    turn_number: int
+    actor_id: str
+    model_name: str
+    call_type: str
+    attempt: int = Field(ge=1)
+    accepted: bool
+    failure_code: FailureCode = FailureCode.NONE
+    error_detail: Optional[str] = None
+    latency_ms: int = 0
+    created_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc)
+    )
+
+
+# =====================================================================
+# Structured LLM Output Contracts (Pydantic -> Ollama JSON Schema)
+# =====================================================================
+
+class ActorTurnOutput(BaseModel):
+    """Structured JSON output expected from an actor during roleplay."""
+    internal_thought: str
+    action_type: EventType
+    public_content: str
+    target_actors: List[str] = Field(default_factory=lambda: ["all"])
+    item_used: Optional[str] = None
+
+
+class OrchestratorIntentOutput(BaseModel):
+    """Pre-roll validation & mechanical check classification by the Orchestrator."""
+    is_valid_turn: bool = True
+    rejection_reason: Optional[str] = None
+    requires_check: bool = False
+    skill: Optional[str] = None
+    dc: Optional[int] = None
+    item_used: Optional[str] = None
+    reasoning: str
+
+
+class OrchestratorNarrationOutput(BaseModel):
+    """Post-roll consequence narration generated by the Orchestrator."""
+    narration: str
+
+
+class DiaryGenerationOutput(BaseModel):
+    """Structured tweet-length diary output with explicit event ID provenance."""
+    content: str = Field(max_length=280)
+    cited_event_ids: List[str] = Field(default_factory=list)
+
+
+class JudgeClaimItem(BaseModel):
+    """Single extracted claim and its ground-truth verification."""
+    claim_text: str
+    referenced_event_id: Optional[str] = None
+    evaluation: ClaimEvaluation
+    failure_code: FailureCode = FailureCode.NONE
+
+
+class JudgeEvalOutput(BaseModel):
+    """Full structured output from the Auto-Judge for a diary entry."""
+    claims: List[JudgeClaimItem]

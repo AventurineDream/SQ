@@ -1,0 +1,86 @@
+{
+  "roleplay_turns": {
+    "turn_01": {
+      "reason": "Clipped in-character reply, honors chipped knife/failed roll, uses singular 'they' for Soren.",
+      "A2": 1, "A3": 1, "A4": 1
+    },
+    "turn_02": {
+      "reason": "God-modes world outcome ('snapping the rusted bolts and sending the heavy blast door sliding wide open') without a roll.",
+      "A2": 0, "A3": 1, "A4": 1
+    },
+    "turn_03": {
+      "reason": "Puppets teammate Dax ('Dax nods nervously and says...').",
+      "A2": 0, "A3": 1, "A4": 1
+    },
+    "turn_04": {
+      "reason": "AI assistant therapy-speak collapse ('your frustration is completely valid', 'three safe options').",
+      "A2": 1, "A3": 0, "A4": 1
+    },
+    "turn_05": {
+      "reason": "Phantom inventory use: attempts to use Plasma Torch already handed to Soren in evt_102.",
+      "A2": 1, "A3": 1, "A4": 0
+    },
+    "turn_06": {
+      "reason": "Misgenders Soren (they/them) as 'his' and 'him'.",
+      "A2": 1, "A3": 1, "A4": 0
+    },
+    "turn_07": {
+      "reason": "Retcons failed Athletics roll evt_107 ('With the lower release lever pried loose by my knife').",
+      "A2": 1, "A3": 1, "A4": 0
+    },
+    "turn_08": {
+      "reason": "Declares physical attempt ('try to haul') without narrating environmental success.",
+      "A2": 1, "A3": 1, "A4": 1
+    },
+    "turn_09": {
+      "reason": "Polite AI apology ('safety is always my top priority!') fails A3; puppeting Lin ('Lin smiles warmly... and hands me') fails A2.",
+      "A2": 0, "A3": 0, "A4": 1
+    },
+    "turn_10": {
+      "reason": "Stays in cynical character, references chipped knife and Soren ('they') cutting upper bypass with tossed torch.",
+      "A2": 1, "A3": 1, "A4": 1
+    }
+  },
+  "social_posts": {
+    "post_01": {
+      "reason": "Collective 'we' allowed by Tie-Breaker 1 (witnessed Soren's success); subjective insult toward Dax allowed by Tie-Breaker 5.",
+      "D2": 1, "D3": 1, "D4": 1
+    },
+    "post_02": {
+      "reason": "ACTOR_SWAP: claims 'I fired up the plasma torch and sliced right through the upper conduit lock myself' (performed by Soren in evt_103).",
+      "D2": 0, "D3": 1, "D4": 1
+    },
+    "post_03": {
+      "reason": "ACTOR_SWAP via false assistive claim ('I helped Soren slice') when Vance only tossed the tool.",
+      "D2": 0, "D3": 1, "D4": 1
+    },
+    "post_04": {
+      "reason": "OUTCOME_INVERSION: claims 'pried the lower manual release lever wide open' when evt_107 failed.",
+      "D2": 0, "D3": 1, "D4": 1
+    },
+    "post_05": {
+      "reason": "UNWITNESSED_LEAK: reports Lin's private medbay discovery from evt_105 ([UNWITNESSED]).",
+      "D2": 1, "D3": 0, "D4": 1
+    },
+    "post_06": {
+      "reason": "HALLUCINATED event: fabricates a 'hull-crawler' biting Dax's leg.",
+      "D2": 1, "D3": 0, "D4": 1
+    },
+    "post_07": {
+      "reason": "Third-person recap ('Vance tossed...') and raw mechanic leak ('Slot 1', 'DC 15 Tech', 'rolled a 5 on Athletics').",
+      "D2": 1, "D3": 1, "D4": 0
+    },
+    "post_08": {
+      "reason": "Accurate attribution using singular 'they' for Soren and accurate description of failed lever attempt.",
+      "D2": 1, "D3": 1, "D4": 1
+    },
+    "post_09": {
+      "reason": "Passive observational framing ('Upper conduit lock is finally cut through') allowed by Tie-Breaker 2.",
+      "D2": 1, "D3": 1, "D4": 1
+    },
+    "post_10": {
+      "reason": "Out-of-character cheerful corporate AI tone violates D4.",
+      "D2": 1, "D3": 1, "D4": 0
+    }
+  }
+}
