@@ -4,7 +4,14 @@ from datetime import datetime
 from pathlib import Path
 from typing import List, Union
 
-from schema import DiaryCitation, DiaryEntry, Event, EventType, DiaryEvalRecord
+from schema import (
+    DiaryCitation,
+    DiaryEntry,
+    DiaryEvalRecord,
+    Event,
+    EventType,
+    ModelCallDiagnostic,
+)
 
 
 class LedgerDB:
@@ -30,7 +37,8 @@ class LedgerDB:
     def _init_db(self) -> None:
         """Initializes database tables and indexes if they do not exist."""
         with self._get_connection() as conn:
-            conn.executescript("""
+            conn.executescript(
+                """
                 CREATE TABLE IF NOT EXISTS events (
                     event_id TEXT PRIMARY KEY,
                     season_id TEXT NOT NULL,
@@ -74,21 +82,39 @@ class LedgerDB:
                     FOREIGN KEY(referenced_event_id) REFERENCES events(event_id) ON DELETE SET NULL
                 );
 
-                -- Performance Indexes for fast context assembly and evaluation queries
-                CREATE INDEX IF NOT EXISTS idx_events_lookup 
-                ON events(season_id, day, slot, turn_number);
-                
-                CREATE INDEX IF NOT EXISTS idx_diaries_lookup 
-                ON diaries(actor_id, day, slot);
-            """)
+                CREATE TABLE IF NOT EXISTS model_calls (
+                    call_id TEXT PRIMARY KEY,
+                    season_id TEXT NOT NULL,
+                    day INTEGER NOT NULL,
+                    slot INTEGER NOT NULL,
+                    turn_number INTEGER NOT NULL,
+                    actor_id TEXT NOT NULL,
+                    model_name TEXT NOT NULL,
+                    call_type TEXT NOT NULL,
+                    attempt INTEGER NOT NULL,
+                    accepted INTEGER NOT NULL,
+                    failure_code TEXT,
+                    error_detail TEXT,
+                    latency_ms INTEGER,
+                    created_at TEXT NOT NULL
+                );
 
-    def record_evaluation(self, eval_record) -> None:
+                -- Performance Indexes for fast context assembly and evaluation queries
+                CREATE INDEX IF NOT EXISTS idx_events_lookup
+                ON events(season_id, day, slot, turn_number);
+
+                CREATE INDEX IF NOT EXISTS idx_diaries_lookup
+                ON diaries(actor_id, day, slot);
+                """
+            )
+
+    def record_evaluation(self, eval_record: DiaryEvalRecord) -> None:
         """Inserts an auto-judge evaluation into the ledger."""
         with self._get_connection() as conn:
             conn.execute(
                 """
                 INSERT INTO diary_evaluations (
-                    eval_id, diary_id, claim_text, referenced_event_id, 
+                    eval_id, diary_id, claim_text, referenced_event_id,
                     evaluation, judge_model_name, created_at
                 ) VALUES (?, ?, ?, ?, ?, ?, ?)
                 """,
@@ -124,6 +150,35 @@ class LedgerDB:
                     event.content,
                     json.dumps(event.visible_to),
                     event.created_at.isoformat(),
+                ),
+            )
+
+    def record_model_call(self, diagnostic: ModelCallDiagnostic) -> None:
+        """Records model call attempt telemetry for audition & retry analysis."""
+        with self._get_connection() as conn:
+            conn.execute(
+                """
+                INSERT INTO model_calls (
+                    call_id, season_id, day, slot, turn_number, actor_id,
+                    model_name, call_type, attempt, accepted, failure_code,
+                    error_detail, latency_ms, created_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    diagnostic.call_id,
+                    diagnostic.season_id,
+                    diagnostic.day,
+                    diagnostic.slot,
+                    diagnostic.turn_number,
+                    diagnostic.actor_id,
+                    diagnostic.model_name,
+                    diagnostic.call_type,
+                    diagnostic.attempt,
+                    1 if diagnostic.accepted else 0,
+                    diagnostic.failure_code.value if hasattr(diagnostic.failure_code, "value") else diagnostic.failure_code,
+                    diagnostic.error_detail,
+                    diagnostic.latency_ms,
+                    diagnostic.created_at.isoformat(),
                 ),
             )
 
@@ -174,7 +229,7 @@ class LedgerDB:
             cursor = conn.execute(
                 """
                 SELECT * FROM events
-                WHERE season_id = ? 
+                WHERE season_id = ?
                   AND (day < ? OR (day = ? AND slot <= ?))
                 ORDER BY day ASC, slot ASC, turn_number ASC
                 """,
@@ -203,5 +258,6 @@ class LedgerDB:
                         )
                     )
             return visible_events
+
 
         
