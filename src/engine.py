@@ -5,14 +5,14 @@ from typing import Dict, List, Optional, Tuple
 
 from schema import (
     ActorTurnOutput,
-    DiaryCitation,
-    DiaryEntry,
-    DiaryGenerationOutput,
     Event,
     EventType,
     FailureCode,
     OrchestratorIntentOutput,
     OrchestratorNarrationOutput,
+    PostCitation,
+    PostEntry,
+    PostGenerationOutput,
 )
 from db import LedgerDB
 from context import ContextAssembler
@@ -189,7 +189,15 @@ class SimulationEngine:
             except ValueError:
                 logger.error(f"Invalid skill returned by orchestrator: {intent_eval.skill}")
 
-    def _trigger_diaries(self, day: int, slot: int, force_write: bool = False):
+    def run_day(self, day: int):
+        """Runs the 3 slots for a specific day."""
+        for slot in range(1, 4):
+            logger.info(f"--- Starting Day {day}, Slot {slot} ---")
+            for turn in range(1, 17):
+                self.run_turn(day, slot, turn)
+            self._trigger_posts(day, slot)
+
+    def _trigger_posts(self, day: int, slot: int, force_write: bool = False):
         for actor_id, actor_model in self.actors.items():
             rng = self._get_turn_rng(day, slot, 0, actor_id)
             roll_val = 1.0 if force_write else rng.uniform(0, 1)
@@ -199,7 +207,7 @@ class SimulationEngine:
                     .get(actor_id, {})
                     .get("bio", f"You are {actor_id}.")
                 )
-                prompt = self.context_assembler.build_diary_prompt(
+                prompt = self.context_assembler.build_post_prompt(
                     season_id=self.season_id,
                     actor_id=actor_id,
                     day=day,
@@ -208,7 +216,7 @@ class SimulationEngine:
                 )
                 res = actor_model.generate_structured(
                     prompt_payload=prompt,
-                    response_model=DiaryGenerationOutput,
+                    response_model=PostGenerationOutput,
                     temperature=0.9,
                     max_tokens=180,
                     diagnostic_callback=self.db.record_model_call,
@@ -218,11 +226,11 @@ class SimulationEngine:
                         "slot": slot,
                         "turn_number": 16,
                         "actor_id": actor_id,
-                        "call_type": "diary",
+                        "call_type": "post",
                     },
                 )
                 if res:
-                    diary = DiaryEntry(
+                    post = PostEntry(
                         season_id=self.season_id,
                         actor_id=actor_id,
                         day=day,
@@ -230,21 +238,13 @@ class SimulationEngine:
                         roll_value=round(roll_val, 4),
                         content=res.content[:280],
                     )
-                    self.db.record_diary(diary)
+                    self.db.record_post(post)
                     for cite_id in res.cited_event_ids:
-                        if hasattr(self.db, "record_citation"):
-                            self.db.record_citation(
-                                DiaryCitation(
-                                    diary_id=diary.diary_id,
-                                    referenced_event_id=cite_id,
-                                )
+                        self.db.record_citation(
+                            PostCitation(
+                                post_id=post.post_id,
+                                referenced_event_id=cite_id,
                             )
-                        elif hasattr(self.db, "record_diary_citation"):
-                            self.db.record_diary_citation(
-                                DiaryCitation(
-                                    diary_id=diary.diary_id,
-                                    referenced_event_id=cite_id,
-                                )
-                            )
+                        )
                     if self.auto_judge:
-                        self.auto_judge.evaluate_diary(self.season_id, diary)
+                        self.auto_judge.evaluate_post(self.season_id, post)

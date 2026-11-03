@@ -48,9 +48,9 @@ class Event(BaseModel):
     )
 
 
-class DiaryEntry(BaseModel):
-    """Represents a tweet-style micro-diary generated at slot completion."""
-    diary_id: str = Field(default_factory=lambda: f"dry_{uuid4().hex[:8]}")
+class PostEntry(BaseModel):
+    """Represents a tweet-style micro-blog post generated at slot completion."""
+    post_id: str = Field(default_factory=lambda: f"pst_{uuid4().hex[:8]}")
     season_id: str = "s2-default"
     actor_id: str
     day: int = Field(ge=1, le=7)
@@ -62,19 +62,19 @@ class DiaryEntry(BaseModel):
     )
 
 
-class DiaryCitation(BaseModel):
-    """Explicit relational link between a diary entry and a canonical event_id."""
+class PostCitation(BaseModel):
+    """Explicit relational link between a post and a canonical event_id."""
     citation_id: str = Field(default_factory=lambda: f"cit_{uuid4().hex[:8]}")
-    diary_id: str
+    post_id: str
     referenced_event_id: str
 
 
-class DiaryEvalRecord(BaseModel):
-    """Stores the Auto-Judge evaluation and Failure Codebook v2 label for a diary claim."""
+class PostEvalRecord(BaseModel):
+    """Stores the Auto-Judge evaluation and Failure Codebook v2 label for a post claim."""
     model_config = ConfigDict(protected_namespaces=())
 
     eval_id: str = Field(default_factory=lambda: f"evl_{uuid4().hex[:8]}")
-    diary_id: str
+    post_id: str
     claim_text: str
     referenced_event_id: Optional[str] = None
     evaluation: ClaimEvaluation
@@ -83,7 +83,6 @@ class DiaryEvalRecord(BaseModel):
     created_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc)
     )
-
 
 class ModelCallDiagnostic(BaseModel):
     """Telemetry record for every LLM inference attempt."""
@@ -136,11 +135,10 @@ class OrchestratorNarrationOutput(BaseModel):
     narration: str
 
 
-class DiaryGenerationOutput(BaseModel):
-    """Structured tweet-length diary output with explicit event ID provenance."""
+class PostGenerationOutput(BaseModel):
+    """Structured tweet-length post output with explicit event ID provenance."""
     content: str = Field(max_length=280)
     cited_event_ids: List[str] = Field(default_factory=list)
-
 
 class JudgeClaimItem(BaseModel):
     """Single extracted claim and its ground-truth verification."""
@@ -151,5 +149,5 @@ class JudgeClaimItem(BaseModel):
 
 
 class JudgeEvalOutput(BaseModel):
-    """Full structured output from the Auto-Judge for a diary entry."""
+    """Full structured output from the Auto-Judge for a post."""
     claims: List[JudgeClaimItem]

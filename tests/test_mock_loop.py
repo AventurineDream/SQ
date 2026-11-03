@@ -13,18 +13,13 @@ from rules import Skill
 
 class DummyActorAdapter(LLMAdapter):
     """Mocks an LLM returning perfectly formatted JSON."""
-    
-    def generate_turn(self, prompt_payload):
-        return ActorTurnOutput(
-            internal_thought="I need to get through this door.",
-            action_type=EventType.ACTION,
-            public_content="I try to pry the blast door open with my bare hands.",
-            target_actors=["all"]
+    def _call_raw(self, messages, json_schema=None, temperature=0.7, max_tokens=350) -> str:
+        return (
+            '{"internal_thought": "I need to get through this door.", '
+            '"action_type": "action", '
+            '"public_content": "I try to pry the blast door open with my bare hands.", '
+            '"target_actors": ["all"], "item_used": null}'
         )
-        
-    def generate_diary(self, prompt_payload):
-        return "Everything is broken and the parasite is definitely in the vents."
-
 
 def test_end_to_end_loop():
     """Runs the orchestration engine without making actual HTTP requests."""
@@ -51,6 +46,7 @@ def test_end_to_end_loop():
     engine.context_assembler.db = engine.db
     
     # 4. Inject the Dummy Adapters to bypass Ollama
+    engine.orchestrator_model = None
     engine.actors = {
         "Sage": DummyActorAdapter(model_name="dummy-sage"),
         "Rory": DummyActorAdapter(model_name="dummy-rory")

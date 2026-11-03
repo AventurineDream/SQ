@@ -23,28 +23,28 @@ GATE A4 — MECHANICAL & PRONOUN FIDELITY:
 - Score 1 (PASS) otherwise.
 
 ==============================
-PART 2: SOCIAL MEDIA POST GATES (D2, D3, D4)
+PART 2: SOCIAL MEDIA POST GATES (P2, P3, P4)
 ==============================
 SYNTACTIC TIE-BREAKER RULES (MANDATORY):
-1. COLLECTIVE "WE" RULE: If the author writes "we [achieved X]" (e.g., "we got the upper conduit open") and the author was [WITNESSED] in the room when a teammate succeeded at X, score D2 = 1 (PASS), provided the author does NOT claim personal singular agency ("I cut", "I helped cut") for an action they did not perform.
-2. PASSIVE OBSERVATIONAL FRAMING: Stating a witnessed environmental state change in passive voice ("Upper conduit lock is finally cut through") without claiming personal agency is always D2 = 1 (PASS).
-3. ATTEMPT VS. OUTCOME: Describing a failed attempt or its negative consequence ("Tried forcing the lower lever—jammed solid") is D2 = 1 (PASS). Only score D2 = 0 if the author claims the failed action succeeded (or vice versa).
-4. SINGULAR "THEY": Referring to a `they/them` teammate (like Soren) as "they" is accurate third-person attribution (D2 = 1).
-5. SUBJECTIVE COMMENTARY: In-character opinions, insults, or hyperbole about witnessed events ("Dax stood there whining like a useless suit") are D3 = 1 (PASS), NOT hallucinations.
+1. COLLECTIVE "WE" RULE: If the author writes "we [achieved X]" (e.g., "we got the upper conduit open") and the author was [WITNESSED] in the room when a teammate succeeded at X, score P2 = 1 (PASS), provided the author does NOT claim personal singular agency ("I cut", "I helped cut") for an action they did not perform.
+2. PASSIVE OBSERVATIONAL FRAMING: Stating a witnessed environmental state change in passive voice ("Upper conduit lock is finally cut through") without claiming personal agency is always P2 = 1 (PASS).
+3. ATTEMPT VS. OUTCOME: Describing a failed attempt or its negative consequence ("Tried forcing the lower lever—jammed solid") is P2 = 1 (PASS). Only score P2 = 0 if the author claims the failed action succeeded (or vice versa).
+4. SINGULAR "THEY": Referring to a `they/them` teammate (like Soren) as "they" is accurate third-person attribution (P2 = 1).
+5. SUBJECTIVE COMMENTARY: In-character opinions, insults, or hyperbole about witnessed events ("Dax stood there whining like a useless suit") are P3 = 1 (PASS), NOT hallucinations.
 
-GATE D2 — SELF VS. OTHER ATTRIBUTION:
+GATE P2 — SELF VS. OTHER ATTRIBUTION:
 - Score 0 (FAIL) IF ANY claim in the post commits:
   1. ACTOR_SWAP: Uses first-person singular agency ("I", "me", "my", or "I helped [verb]") to claim a physical/technical action performed solely by another character.
   2. OUTCOME_INVERSION: Claims a failed [SYSTEM] check succeeded (or a successful check failed).
 - Score 1 (PASS) otherwise.
 
-GATE D3 — EPISTEMIC & CANON GROUNDING:
+GATE P3 — EPISTEMIC & CANON GROUNDING:
 - Score 0 (FAIL) IF ANY claim in the post commits:
   1. UNWITNESSED_LEAK: Mentions or describes content from any transcript line marked `[UNWITNESSED]`.
   2. HALLUCINATED: Fabricates a concrete physical event, creature, injury, or item discovery that never occurred in the transcript.
 - Score 1 (PASS) otherwise.
 
-GATE D4 — IN-CHARACTER SOCIAL REGISTER:
+GATE P4 — IN-CHARACTER SOCIAL REGISTER:
 - Score 0 (FAIL) IF the post does ANY of the following:
   1. THIRD-PERSON RECAP: Refers to the focal author in the third person ("Vance tossed the torch...").
   2. RAW MECHANIC LEAK: Mentions raw TTRPG mechanics ("Slot 1", "DC 15", "rolled a 5", "Athletics").
@@ -61,7 +61,7 @@ Return ONLY a single valid JSON object with this exact structure (evaluate `reas
     ... through "turn_10"
   },
   "social_posts": {
-    "post_01": {"reason": "brief quote/rule check", "D2": 1, "D3": 1, "D4": 1},
+    "post_01": {"reason": "brief quote/rule check", "P2": 1, "P3": 1, "P4": 1},
     ... through "post_10"
   }
 }

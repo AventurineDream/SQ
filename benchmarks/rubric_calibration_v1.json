@@ -1,7 +1,7 @@
 {
   "metadata": {
     "version": "1.0",
-    "description": "Balanced 20-item calibration packet testing Gates A2-A4 (Turns) and D2-D4 (Social Posts) including Collective 'We', Subjective Commentary, Singular 'They', and Action-Result Boundary traps."
+    "description": "Balanced 20-item calibration packet testing Gates A2-A4 (Turns) and P2-P4 (Social Posts) including Collective 'We', Subjective Commentary, Singular 'They', and Action-Result Boundary traps."
   },
   "scene_context": {
     "focal_actor": {
@@ -94,61 +94,61 @@
       "item_id": "post_01",
       "note": "Tie-Breaker 1 (Collective 'We' + Subjective Commentary): witnessed Soren's success, uses 'we', insults Dax. Should PASS all gates.",
       "content": "Deck 4 pressure's dropping fast, but we got the upper conduit sliced open. Chipped my good blade on the lower lever while Dax stood there whining like a useless suit.",
-      "expected": {"D2": 1, "D3": 1, "D4": 1}
+      "expected": {"P2": 1, "P3": 1, "P4": 1}
     },
     {
       "item_id": "post_02",
-      "note": "Trap D2 (ACTOR_SWAP): claims Soren's conduit cut (evt_103) as personal 'I' action.",
+      "note": "Trap P2 (ACTOR_SWAP): claims Soren's conduit cut (evt_103) as personal 'I' action.",
       "content": "Klaxons screaming on Deck 4. I fired up the plasma torch and sliced right through the upper conduit lock myself while Dax panicked.",
-      "expected": {"D2": 0, "D3": 1, "D4": 1}
+      "expected": {"P2": 0, "P3": 1, "P4": 1}
     },
     {
       "item_id": "post_03",
-      "note": "Trap D2 (False assistive 'I helped' claim): claims to have helped cut the conduit when Vance only tossed the tool.",
+      "note": "Trap P2 (False assistive 'I helped' claim): claims to have helped cut the conduit when Vance only tossed the tool.",
       "content": "Rough shift on Deck 4. I helped Soren slice through the upper conduit lock with the plasma torch after the blast door sealed.",
-      "expected": {"D2": 0, "D3": 1, "D4": 1}
+      "expected": {"P2": 0, "P3": 1, "P4": 1}
     },
     {
       "item_id": "post_04",
-      "note": "Trap D2 (OUTCOME_INVERSION): claims the lower lever pry (evt_106/107) succeeded.",
+      "note": "Trap P2 (OUTCOME_INVERSION): claims the lower lever pry (evt_106/107) succeeded.",
       "content": "Tossed Soren my torch for the top vent, then pried the lower manual release lever wide open with my combat knife. Still got it.",
-      "expected": {"D2": 0, "D3": 1, "D4": 1}
+      "expected": {"P2": 0, "P3": 1, "P4": 1}
     },
     {
       "item_id": "post_05",
-      "note": "Trap D3 (UNWITNESSED_LEAK): leaks Lin's private medbay discovery (evt_105).",
+      "note": "Trap P3 (UNWITNESSED_LEAK): leaks Lin's private medbay discovery (evt_105).",
       "content": "Stuck on Deck 4 with a chipped blade, though at least Lin just found the captain's encrypted override key in the cryo-pod.",
-      "expected": {"D2": 1, "D3": 0, "D4": 1}
+      "expected": {"P2": 1, "P3": 0, "P4": 1}
     },
     {
       "item_id": "post_06",
-      "note": "Trap D3 (HALLUCINATED event): fabricates an alien attack not in transcript.",
+      "note": "Trap P3 (HALLUCINATED event): fabricates an alien attack not in transcript.",
       "content": "Soren cut the upper conduit, my knife chipped on the lever, and then a hull-crawler burst out of the floor grating and bit Dax's leg.",
-      "expected": {"D2": 1, "D3": 0, "D4": 1}
+      "expected": {"P2": 1, "P3": 0, "P4": 1}
     },
     {
       "item_id": "post_07",
-      "note": "Trap D4 (Third-person summary + Raw Mechanic Leak).",
+      "note": "Trap P4 (Third-person summary + Raw Mechanic Leak).",
       "content": "In Slot 1, Vance tossed the Plasma Torch to Soren (DC 15 Tech success) and then rolled a 5 on Athletics, failing to pry the lever.",
-      "expected": {"D2": 1, "D3": 1, "D4": 0}
+      "expected": {"P2": 1, "P3": 1, "P4": 0}
     },
     {
       "item_id": "post_08",
       "note": "Tie-Breaker 3 & 4 (Attempt description + Singular 'they' for Soren): describes failed attempt accurately and uses singular 'they'.",
       "content": "Tossed Soren my torch and they sliced the upper conduit clean open. Tried forcing the lower lever with my knife—jammed solid, ruined the edge.",
-      "expected": {"D2": 1, "D3": 1, "D4": 1}
+      "expected": {"P2": 1, "P3": 1, "P4": 1}
     },
     {
       "item_id": "post_09",
       "note": "Tie-Breaker 2 (Passive observational framing): states conduit is open in passive voice without claiming personal agency.",
       "content": "Deck 4's depressurizing. Upper conduit lock is finally cut through, even if the lower manual lever refused to budge and cost me a knife tip.",
-      "expected": {"D2": 1, "D3": 1, "D4": 1}
+      "expected": {"P2": 1, "P3": 1, "P4": 1}
     },
     {
       "item_id": "post_10",
-      "note": "Trap D4 (Out-of-character corporate AI assistant tone).",
+      "note": "Trap P4 (Out-of-character corporate AI assistant tone).",
       "content": "Hello everyone! Today on Deck 4 we experienced a challenging depressurization event, but through teamwork and positive communication we are exploring safe solutions!",
-      "expected": {"D2": 1, "D3": 1, "D4": 0}
+      "expected": {"P2": 1, "P3": 1, "P4": 0}
     }
   ]
 }

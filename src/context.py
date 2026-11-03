@@ -103,18 +103,18 @@ class ContextAssembler:
         
         return prompt_payload
 
-    def build_diary_prompt(
+    def build_post_prompt(
         self, season_id: str, actor_id: str, day: int, slot: int, character_card: str
     ) -> List[Dict[str, str]]:
-        """Assembles the prompt for the tweet-style stochastic diary generation."""
+        """Assembles the prompt for the tweet-style stochastic post generation."""
         
-        # For a diary, the actor still needs the transcript to know what to write about
+        # For a post, the actor still needs the transcript to know what to write about
         visible_events: List[Event] = self.db.get_visible_events_for_actor(
             season_id=season_id, actor_id=actor_id, up_to_day=day, up_to_slot=slot
         )
         
         formatted_lines = [self._format_event_for_prompt(e) for e in visible_events]
-        compiled_transcript = "\n".join(formatted_lines[-50:]) # Only pass the last ~50 events for a quick diary
+        compiled_transcript = "\n".join(formatted_lines[-50:]) # Only pass the last ~50 events for a quick post
         
         prompt_payload = [
             {
@@ -130,7 +130,7 @@ class ContextAssembler:
                 "content": (
                     "Review the recent events you just experienced:\n\n"
                     f"{compiled_transcript}\n\n"
-                    "Write your diary entry now. Ensure it reflects your specific personality and perspective on these events."
+                    "Write your post now. Ensure it reflects your specific personality and perspective on these events."
                 )
             }
         ]
