@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 
-from schema import Event, EventType, DiaryEntry, ClaimEvaluation
+from schema import Event, EventType, PostEntry, ClaimEvaluation
 from db import LedgerDB
 from evals import AutoJudge
 from inference import LLMAdapter
@@ -13,12 +13,8 @@ from inference import LLMAdapter
 class MockJudgeAdapter(LLMAdapter):
     """Mocks an LLM Judge returning a structured evaluation."""
     
-    def generate_turn(self, prompt_payload):
-        pass
-        
-    def generate_diary(self, prompt_payload):
-        pass
-        
+    def _call_raw(self, messages, json_schema=None, temperature=0.7, max_tokens=350) -> str:
+        return "{}"
     def generate_generic_json(self, prompt_payload) -> str:
         """Simulates the Mistral judge catching a misattribution."""
         return json.dumps({
@@ -27,7 +23,7 @@ class MockJudgeAdapter(LLMAdapter):
         })
 
 def test_auto_judge_pipeline():
-    """Proves the Auto-Judge intercepts diaries and logs evaluations."""
+    """Proves the Auto-Judge intercepts posts and logs evaluations."""
     
     test_db_path = "data/test_eval_ledger.db"
     if os.path.exists(test_db_path):
@@ -46,23 +42,23 @@ def test_auto_judge_pipeline():
     for e in events:
         db.record_event(e)
 
-    # 2. Simulate Sage writing a misattributed diary entry
-    misattributed_diary = DiaryEntry(
+    # 2. Simulate Sage writing a misattributed post
+    misattributed_post = PostEntry(
         actor_id="Sage",
         day=1,
         slot=1,
         roll_value=0.85, # Passed the stochastic check
         content="Close call today. The airlock blew, but I managed to reroute the pressure valves just in time. Rory was panicking."
     )
-    db.record_diary(misattributed_diary)
-    print(f"[*] Recorded Diary: '{misattributed_diary.content}'")
+    db.record_post(misattributed_post)
+    print(f"[*] Recorded Post: '{misattributed_post.content}'")
 
     # 3. Run the Auto-Judge
     print("[*] Running Auto-Judge...")
     mock_judge_model = MockJudgeAdapter(model_name="mock-mistral-judge")
     auto_judge = AutoJudge(db=db, judge_model=mock_judge_model)
     
-    eval_records = auto_judge.evaluate_diary(season_id="s2-eval", diary=misattributed_diary)
+    eval_records = auto_judge.evaluate_post(season_id="s2-eval", post=misattributed_post)
 
     # 4. Verify Results
     print("\n=== EVALUATION RESULT ===")

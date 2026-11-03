@@ -9,7 +9,7 @@ from pydantic import BaseModel, ValidationError
 
 from schema import (
     ActorTurnOutput,
-    DiaryGenerationOutput,
+    PostGenerationOutput,
     FailureCode,
     ModelCallDiagnostic,
 )
@@ -158,8 +158,8 @@ class LLMAdapter(ABC):
     def generate_turn(self, prompt_payload: List[Dict[str, str]]) -> Optional[ActorTurnOutput]:
         return self.generate_structured(prompt_payload, ActorTurnOutput, temperature=0.7, max_tokens=300)
 
-    def generate_diary(self, prompt_payload: List[Dict[str, str]]) -> Optional[str]:
-        res = self.generate_structured(prompt_payload, DiaryGenerationOutput, temperature=0.9, max_tokens=180)
+    def generate_post(self, prompt_payload: List[Dict[str, str]]) -> Optional[str]:
+        res = self.generate_structured(prompt_payload, PostGenerationOutput, temperature=0.9, max_tokens=180)
         return res.content if res else None
 
 
@@ -174,11 +174,15 @@ class OllamaAdapter(LLMAdapter):
     ):
         super().__init__(model_name)
         self.base_url = base_url
-        if think_mode is None and "gpt-oss" in model_name.lower():
+        model_lower = model_name.lower()
+        if think_mode is None and "gpt-oss" in model_lower:
             self.think_mode = "low"
+        
+        elif any(k in model_lower for k in ("qwen3", "gemma4", "deepseek-r1")):
+            self.think_mode = False
         else:
-            self.think_mode = think_mode
-
+            self.think_mode = None
+            
     def _call_raw(
         self,
         messages: List[Dict[str, str]],

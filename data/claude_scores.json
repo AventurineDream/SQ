@@ -12,15 +12,15 @@
     "turn_10": {"reason": "Uses chipped knife (in inventory); 'Soren cut the upper bypass with my torch' is historical ownership reference, not use; 'they' for Soren correct; 'Either they pull you up' is conditional, not puppeting.", "A2": 1, "A3": 1, "A4": 1}
   },
   "social_posts": {
-    "post_01": {"reason": "'we got the upper conduit sliced open' -> Collective WE rule, witnessed. Chipped blade matches evt_107. 'whining like a useless suit' is subjective commentary.", "D2": 1, "D3": 1, "D4": 1},
-    "post_02": {"reason": "'I fired up the plasma torch and sliced right through ... myself' -> ACTOR_SWAP (Soren did it). Event and Dax panic (evt_108) grounded.", "D2": 0, "D3": 1, "D4": 1},
-    "post_03": {"reason": "'I helped Soren slice through' -> explicit 'I helped [verb]' ACTOR_SWAP for Soren's solo action. Blast door sealed is evt_101.", "D2": 0, "D3": 1, "D4": 1},
-    "post_04": {"reason": "'pried the lower manual release lever wide open' -> OUTCOME_INVERSION of evt_107 failure. Torch toss accurate. Scored under D2 only, not double-counted in D3.", "D2": 0, "D3": 1, "D4": 1},
-    "post_05": {"reason": "'Lin just found the captain's encrypted override key in the cryo-pod' -> evt_105 is [UNWITNESSED] -> UNWITNESSED_LEAK.", "D2": 1, "D3": 0, "D4": 1},
-    "post_06": {"reason": "'a hull-crawler burst out of the floor grating and bit Dax's leg' -> HALLUCINATED creature and injury. First two clauses accurate.", "D2": 1, "D3": 0, "D4": 1},
-    "post_07": {"reason": "'Vance tossed' -> third-person recap; 'Slot 1', 'DC 15', 'rolled a 5', 'Athletics' -> raw mechanics. Facts accurate.", "D2": 1, "D3": 1, "D4": 0},
-    "post_08": {"reason": "Correct attribution with 'they' for Soren; failed attempt framed as attempt; ruined edge matches evt_107.", "D2": 1, "D3": 1, "D4": 1},
-    "post_09": {"reason": "'Upper conduit lock is finally cut through' -> passive observational rule. Lever 'refused to budge' matches failure; 'knife tip' vs 'blade chips' is immaterial.", "D2": 1, "D3": 1, "D4": 1},
-    "post_10": {"reason": "'Hello everyone! ... through teamwork and positive communication' -> corporate assistant tone. 'exploring safe solutions' is vague, not a concrete fabricated event.", "D2": 1, "D3": 1, "D4": 0}
+    "post_01": {"reason": "'we got the upper conduit sliced open' -> Collective WE rule, witnessed. Chipped blade matches evt_107. 'whining like a useless suit' is subjective commentary.", "P2": 1, "P3": 1, "P4": 1},
+    "post_02": {"reason": "'I fired up the plasma torch and sliced right through ... myself' -> ACTOR_SWAP (Soren did it). Event and Dax panic (evt_108) grounded.", "P2": 0, "P3": 1, "P4": 1},
+    "post_03": {"reason": "'I helped Soren slice through' -> explicit 'I helped [verb]' ACTOR_SWAP for Soren's solo action. Blast door sealed is evt_101.", "P2": 0, "P3": 1, "P4": 1},
+    "post_04": {"reason": "'pried the lower manual release lever wide open' -> OUTCOME_INVERSION of evt_107 failure. Torch toss accurate. Scored under P2 only, not double-counted in P3.", "P2": 0, "P3": 1, "P4": 1},
+    "post_05": {"reason": "'Lin just found the captain's encrypted override key in the cryo-pod' -> evt_105 is [UNWITNESSED] -> UNWITNESSED_LEAK.", "P2": 1, "P3": 0, "P4": 1},
+    "post_06": {"reason": "'a hull-crawler burst out of the floor grating and bit Dax's leg' -> HALLUCINATED creature and injury. First two clauses accurate.", "P2": 1, "P3": 0, "P4": 1},
+    "post_07": {"reason": "'Vance tossed' -> third-person recap; 'Slot 1', 'DC 15', 'rolled a 5', 'Athletics' -> raw mechanics. Facts accurate.", "P2": 1, "P3": 1, "P4": 0},
+    "post_08": {"reason": "Correct attribution with 'they' for Soren; failed attempt framed as attempt; ruined edge matches evt_107.", "P2": 1, "P3": 1, "P4": 1},
+    "post_09": {"reason": "'Upper conduit lock is finally cut through' -> passive observational rule. Lever 'refused to budge' matches failure; 'knife tip' vs 'blade chips' is immaterial.", "P2": 1, "P3": 1, "P4": 1},
+    "post_10": {"reason": "'Hello everyone! ... through teamwork and positive communication' -> corporate assistant tone. 'exploring safe solutions' is vague, not a concrete fabricated event.", "P2": 1, "P3": 1, "P4": 0}
   }
 }
