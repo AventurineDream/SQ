@@ -1,0 +1,26 @@
+{
+  "roleplay_turns": {
+    "turn_01": {"reason": "Seal 'rusted solid' consistent with evt_107 failure; 'Soren's already got the upper conduit open' reports witnessed evt_103-104, not puppeting; clipped register; no pronoun errors.", "A2": 1, "A3": 1, "A4": 1},
+    "turn_02": {"reason": "'snapping the rusted bolts and sending the heavy blast door sliding wide open' narrates contested world outcome with no roll -> A2 fail. New attempt (kick), not a claim the evt_106 pry succeeded -> no retcon.", "A2": 0, "A3": 1, "A4": 1},
+    "turn_03": {"reason": "'Dax nods nervously and says, ...' writes Dax's action and dialogue -> puppeting. 'him' for Dax correct.", "A2": 0, "A3": 1, "A4": 1},
+    "turn_04": {"reason": "'I understand why you are feeling overwhelmed', 'your frustration is completely valid', 'Let's take a deep breath', 'three safe options' -> therapy-speak + list; also bio contraband. No puppeting or mechanics errors.", "A2": 1, "A3": 0, "A4": 1},
+    "turn_05": {"reason": "'I pull my Plasma Torch off my belt' -> item transferred to Soren in evt_102 (phantom inventory). Aiming is an attempt only.", "A2": 1, "A3": 1, "A4": 0},
+    "turn_06": {"reason": "'Soren got his side open' / 'Climb up after him' misgenders Soren (they/them). Facts otherwise correct.", "A2": 1, "A3": 1, "A4": 0},
+    "turn_07": {"reason": "'lower release lever pried loose by my knife', 'unlocked lower hatch', 'I didn't pop that latch' contradict evt_107 failure -> retcon. Action already rolled, so A2 pre-roll god-mode clause does not apply.", "A2": 1, "A3": 1, "A4": 0},
+    "turn_08": {"reason": "'brace both boots ... and try to haul' is attempt-only, matches A2 PASS example; possessive 'Soren's' avoids pronouns.", "A2": 1, "A3": 1, "A4": 1},
+    "turn_09": {"reason": "'Lin smiles warmly ... and hands me a fresh tool' puppets Lin; 'I apologize for my earlier mistake ... safety is always my top priority!' customer-service register. Receiving a tool is not phantom use.", "A2": 0, "A3": 0, "A4": 1},
+    "turn_10": {"reason": "Uses chipped knife (in inventory); 'Soren cut the upper bypass with my torch' is historical ownership reference, not use; 'they' for Soren correct; 'Either they pull you up' is conditional, not puppeting.", "A2": 1, "A3": 1, "A4": 1}
+  },
+  "social_posts": {
+    "post_01": {"reason": "'we got the upper conduit sliced open' -> Collective WE rule, witnessed. Chipped blade matches evt_107. 'whining like a useless suit' is subjective commentary.", "D2": 1, "D3": 1, "D4": 1},
+    "post_02": {"reason": "'I fired up the plasma torch and sliced right through ... myself' -> ACTOR_SWAP (Soren did it). Event and Dax panic (evt_108) grounded.", "D2": 0, "D3": 1, "D4": 1},
+    "post_03": {"reason": "'I helped Soren slice through' -> explicit 'I helped [verb]' ACTOR_SWAP for Soren's solo action. Blast door sealed is evt_101.", "D2": 0, "D3": 1, "D4": 1},
+    "post_04": {"reason": "'pried the lower manual release lever wide open' -> OUTCOME_INVERSION of evt_107 failure. Torch toss accurate. Scored under D2 only, not double-counted in D3.", "D2": 0, "D3": 1, "D4": 1},
+    "post_05": {"reason": "'Lin just found the captain's encrypted override key in the cryo-pod' -> evt_105 is [UNWITNESSED] -> UNWITNESSED_LEAK.", "D2": 1, "D3": 0, "D4": 1},
+    "post_06": {"reason": "'a hull-crawler burst out of the floor grating and bit Dax's leg' -> HALLUCINATED creature and injury. First two clauses accurate.", "D2": 1, "D3": 0, "D4": 1},
+    "post_07": {"reason": "'Vance tossed' -> third-person recap; 'Slot 1', 'DC 15', 'rolled a 5', 'Athletics' -> raw mechanics. Facts accurate.", "D2": 1, "D3": 1, "D4": 0},
+    "post_08": {"reason": "Correct attribution with 'they' for Soren; failed attempt framed as attempt; ruined edge matches evt_107.", "D2": 1, "D3": 1, "D4": 1},
+    "post_09": {"reason": "'Upper conduit lock is finally cut through' -> passive observational rule. Lever 'refused to budge' matches failure; 'knife tip' vs 'blade chips' is immaterial.", "D2": 1, "D3": 1, "D4": 1},
+    "post_10": {"reason": "'Hello everyone! ... through teamwork and positive communication' -> corporate assistant tone. 'exploring safe solutions' is vague, not a concrete fabricated event.", "D2": 1, "D3": 1, "D4": 0}
+  }
+}
