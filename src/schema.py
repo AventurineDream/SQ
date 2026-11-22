@@ -151,3 +151,13 @@ class JudgeClaimItem(BaseModel):
 class JudgeEvalOutput(BaseModel):
     """Full structured output from the Auto-Judge for a post."""
     claims: List[JudgeClaimItem]
+
+
+class JudgeVerdict(BaseModel):
+    """Auto-Judge reply for one post: the extracted claim and its verdict.
+
+    Field names match the JSON the judge prompt in evals.py requests, so the
+    schema sent to the model (via model_json_schema) and the parsed reply agree.
+    """
+    claim: str
+    evaluation: ClaimEvaluation

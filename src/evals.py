@@ -1,10 +1,9 @@
 # src/evals.py
 
 from typing import List
-from schema import PostEntry, Event, PostEvalRecord, ClaimEvaluation
+from schema import PostEntry, PostEvalRecord, JudgeVerdict
 from db import LedgerDB
 from inference import LLMAdapter # Import the base adapter
-import json
 
 class AutoJudge:
     def __init__(self, db: LedgerDB, judge_model: LLMAdapter):
@@ -47,26 +46,34 @@ class AutoJudge:
              }
         ]
 
-        # 3. Request evaluation from the Judge model
-        raw_output = self.judge_model.generate_generic_json(prompt)
-        
-        eval_records = []
-        if raw_output:
-            try:
-                # 4. Parse the output and create the record
-                eval_data = json.loads(raw_output)
-                eval_record = PostEvalRecord(
-                    post_id=post.post_id,
-                    claim_text=eval_data.get("claim", post.content),
-                    referenced_event_id=None,
-                    evaluation=ClaimEvaluation(eval_data.get("evaluation", "unclear")),
-                    judge_model_name=self.judge_model.model_name
-                )
-                eval_records.append(eval_record)
-                
-                # 5. Save to database
-                self.db.record_evaluation(eval_record)
-            except Exception as e:
-                print(f"Error parsing judge output: {e}")
-                
-        return eval_records
+        # 3. Request a structured verdict. generate_structured validates the reply
+        #    against JudgeVerdict and retries with feedback. A reply that never
+        #    validates returns None; the diagnostics callback still records each
+        #    rejected attempt, so judge failures stay visible in the telemetry.
+        #    Temperature 0 keeps the verdict deterministic for the same transcript.
+        verdict = self.judge_model.generate_structured(
+            prompt_payload=prompt,
+            response_model=JudgeVerdict,
+            temperature=0.0,
+            diagnostic_callback=self.db.record_model_call,
+            call_meta={
+                "season_id": season_id,
+                "day": post.day,
+                "slot": post.slot,
+                "actor_id": post.actor_id,
+                "call_type": "judge",
+            },
+        )
+        if verdict is None:
+            return []
+
+        # 4. Save the verdict to the database
+        eval_record = PostEvalRecord(
+            post_id=post.post_id,
+            claim_text=verdict.claim,
+            referenced_event_id=None,
+            evaluation=verdict.evaluation,
+            judge_model_name=self.judge_model.model_name,
+        )
+        self.db.record_evaluation(eval_record)
+        return [eval_record]
