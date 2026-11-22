@@ -1,0 +1,14 @@
+# Python bytecode and tool caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+build/
+dist/
+.venv/
+
+# Local SQLite ledgers (CLAUDE.md: never commit .db, .db-shm, .db-wal)
+data/*.db
+data/*.db-shm
+data/*.db-wal
