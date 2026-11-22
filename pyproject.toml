@@ -1,0 +1,44 @@
+# Packaging for Simulation Query. The flat modules live in src/ and are installed
+# as top-level modules (`from schema import ...`), so `pip install -e '.[dev]'`
+# is the only setup needed for tests, scripts, and run_season.py.
+
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "simulation-query"
+version = "0.1.0"
+description = "Multi-agent TTRPG simulation harness with SQLite ledger and auto-judge telemetry."
+readme = "README.md"
+# 3.11 is the floor CI tests; 3.14 is the pinned development interpreter (.python-version).
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.0.0",
+    "tiktoken>=0.7.0",
+    "requests>=2.31.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.6",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+py-modules = ["context", "db", "engine", "evals", "inference", "prompts", "rules", "schema"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+src = ["src", "tests", "scripts"]
+
+[tool.ruff.lint]
+# Pyflakes and pycodestyle error classes. The full code standard ruleset is
+# adopted in a separate pass; enabling it here would require a repo-wide docstring sweep.
+select = ["E4", "E7", "E9", "F"]

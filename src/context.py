@@ -1,5 +1,5 @@
 import tiktoken
-from typing import List, Dict, Any
+from typing import List, Dict
 
 from schema import Event, EventType
 from db import LedgerDB
