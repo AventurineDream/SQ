@@ -1,10 +1,5 @@
 import argparse
 import logging
-import os
-import sys
-
-# Ensure imports inside src/ (like `from schema import ...`) resolve cleanly
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "src")))
 
 from engine import SimulationEngine
 from evals import AutoJudge

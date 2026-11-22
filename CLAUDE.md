@@ -17,7 +17,7 @@ Simulation Query is an autonomous, production-grade multi-agent simulation platf
 
 ## 3. Key Execution Commands
 * **Run All Unit & Integration Tests:**
-  `python tests/test_pipeline.py && python tests/test_mock_loop.py && python tests/test_evals.py`
+  `python -m pytest` (after `pip install -e '.[dev]'`; tests use pytest `tmp_path` ledgers)
 * **Run Pre-Season Model Audition (3 Genres):**
   `python audition.py --model qwen2.5:7b`
 * **Run Production Simulation (Crash-Resumable + Auto CSV Export):**

@@ -6,10 +6,8 @@ from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
 from schema import (
-    ClaimEvaluation,
     Event,
     EventType,
-    FailureCode,
     ModelCallDiagnostic,
     PostCitation,
     PostEntry,
